@@ -80,7 +80,7 @@ title.BorderSizePixel = 0
 local titleCorner = Instance.new("UICorner", title)
 titleCorner.CornerRadius = UDim.new(0, 15)
 
--- Danh sách nút bật/tắt
+-- Testing
 local buttons = {
     {name = "Farm 1", position = UDim2.new(0.1, 0, 0.25, 0)},
     {name = "Farm 2", position = UDim2.new(0.1, 0, 0.45, 0)},
@@ -139,53 +139,50 @@ local function createToggleButton(info)
                     0.3,
                     true
                 )
-                statusText.Text = info.name .. ": ON" -- Cập nhật trạng thái
-                buttonFrame.BackgroundColor3 = Color3.fromRGB(70, 130, 200) -- Đổi màu khung chính
-            else
-                -- Hiệu ứng kéo sang trái (TẮT)
-                toggle:TweenPosition(
-                    UDim2.new(0, 0, 0, 0), -- Di chuyển sang trái
-                    Enum.EasingDirection.Out,
-                    Enum.EasingStyle.Quad,
-                    0.3,
-                    true
-                )
-                statusText.Text = info.name .. ": OFF" -- Cập nhật trạng thái
-                buttonFrame.BackgroundColor3 = Color3.fromRGB(50, 100, 180) -- Màu ban đầu
-            end
+local library = game:GetService("RunService").RenderStepped:Connect(function()
+    local win = library:Window("Taidepzai",[[Menu]],[[Version : Premium ]],"9606070311",Enum.KeyCode.RightControl)
+
+    local General_Tab = win:Tab("General",[[7040391851]])
+    local Quest_Tab = win:Tab("    Quest & Item",[[9606626859]])
+    local PvP_Tab = win:Tab("PvP",[[9606626034]])
+    local Raid_Tab = win:Tab("Raid",[[9606629300]])
+    local Shop_Tab = win:Tab("Shop",[[9606625251]])
+    local Island_Tab = win:Tab("Island",[[9606628205]])
+    local Setting_Tab = win:Tab("Setting",[[9606644121]])
+    local Status_Tab = win:Tab("Status",[[9613645002]])
+    local Esp_Tab = win:Tab("ESP",[[9606628205]])
+    local Hop_Tab = win:Tab("Hop",[[9608089732]])
+
+    General_Tab:Label("Farm Level")
+    General_Tab:Toggle("Auto Farm","9606294253",_G.Setting_table.AutoFarm,function(vu)
+        Auto_Farm = vu
+        _G.Setting_table.AutoFarm = vu
+        Update_Setting(getgenv()['MyName'])
+    end)
+
+    local plr = game.Players.LocalPlayer
+    local CbFw = getupvalues(require(plr.PlayerScripts.CombatFramework))
+    local CbFw2 = CbFw[2]
+
+    function GetCurrentBlade()
+        local p13 = CbFw2.activeController
+        local ret = p13.blades[1]
+        if not ret then return end
+        while ret.Parent~=game.Players.LocalPlayer.Character do ret=ret.Parent end
+        return ret
+    end
+
+    -- Thêm chức năng mới
+    local Function_Tab = win:Tab("Function",[[9606626859]])
+    Function_Tab:Button("Get Current Blade",function()
+        local blade = GetCurrentBlade()
+        if blade then
+            print("Current Blade: ".. blade.Name)
+        else
+            print("Không tìm thấy blade")
         end
     end)
-end
-
--- Tạo các nút toggle
-for _, btnInfo in ipairs(buttons) do
-    createToggleButton(btnInfo)
-end
--- Tạo nút bật/tắt
-local function createToggleButton(info)
-    -- Khung chính của nút
-    local buttonFrame = Instance.new("Frame", mainFrame)
-    buttonFrame.Name = info.name
-    buttonFrame.Size = UDim2.new(0.8, 0, 0.15, 0)
-    buttonFrame.Position = info.position
-    buttonFrame.BackgroundColor3 = Color3.fromRGB(50, 100, 180)
-    buttonFrame.BorderSizePixel = 0
-
-    -- Hiệu ứng góc bo cho khung chính
-    local buttonCorner = Instance.new("UICorner", buttonFrame)
-    buttonCorner.CornerRadius = UDim.new(0, 10)
-
-    -- Nút nhỏ di chuyển trong toggle
-    local toggle = Instance.new("Frame", buttonFrame)
-    toggle.Size = UDim2.new(0.3, 0, 1, 0)
-    toggle.Position = UDim2.new(0, 0, 0, 0)
-    toggle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    toggle.BorderSizePixel = 0
-
-    -- Hiệu ứng góc bo cho nút nhỏ
-    local toggleCorner = Instance.new("UICorner", toggle)
-    toggleCorner.CornerRadius = UDim.new(0, 10)
-
+end)
     -- Text hiển thị trạng thái
     local statusText = Instance.new("TextLabel", buttonFrame)
     statusText.Size = UDim2.new(1, 0, 1, 0)
